@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Ship, 
@@ -23,26 +23,39 @@ interface SidebarItemProps {
   icon: React.ElementType;
   label: string;
   href: string;
-  active?: boolean;
+  end?: boolean;
 }
 
-const SidebarItem = ({ icon: Icon, label, href, active }: SidebarItemProps) => (
-  <Link
+const SidebarItem = ({ icon: Icon, label, href, end }: SidebarItemProps) => (
+  <NavLink
     to={href}
-    className={cn(
-      "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group",
-      active 
-        ? "bg-primary text-primary-foreground font-medium" 
-        : "text-muted-foreground hover:bg-muted hover:text-foreground"
-    )}
+    end={end}
+    className={({ isActive }) =>
+      cn(
+        "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group",
+        isActive
+          ? "bg-primary text-primary-foreground font-medium"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+      )
+    }
   >
-    <Icon className={cn("w-5 h-5", active ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground")} />
-    <span>{label}</span>
-  </Link>
+    {({ isActive }) => (
+      <>
+        <Icon
+          className={cn(
+            "w-5 h-5",
+            isActive
+              ? "text-primary-foreground"
+              : "text-muted-foreground group-hover:text-foreground"
+          )}
+        />
+        <span>{label}</span>
+      </>
+    )}
+  </NavLink>
 );
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
 
   return (
@@ -65,38 +78,34 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           </div>
 
           <nav className="flex-1 px-4 py-4 space-y-1">
-            <SidebarItem 
-              icon={LayoutDashboard} 
-              label={isSidebarOpen ? "Dashboard" : ""} 
-              href="/" 
-              active={location.pathname === "/"} 
+            <SidebarItem
+              icon={LayoutDashboard}
+              label={isSidebarOpen ? "Dashboard" : ""}
+              href="/"
+              end
             />
-            <SidebarItem 
-              icon={Ship} 
-              label={isSidebarOpen ? "All Shipments" : ""} 
-              href="/shipments" 
-              active={location.pathname.startsWith("/shipments")} 
+            <SidebarItem
+              icon={Ship}
+              label={isSidebarOpen ? "All Shipments" : ""}
+              href="/shipments"
             />
-            <SidebarItem 
-              icon={Bell} 
-              label={isSidebarOpen ? "Alerts & Actions" : ""} 
-              href="/alerts" 
-              active={location.pathname === "/alerts"} 
+            <SidebarItem
+              icon={Bell}
+              label={isSidebarOpen ? "Alerts & Actions" : ""}
+              href="/alerts"
             />
-            <SidebarItem 
-              icon={FileText} 
-              label={isSidebarOpen ? "Documents" : ""} 
-              href="/documents" 
-              active={location.pathname === "/documents"} 
+            <SidebarItem
+              icon={FileText}
+              label={isSidebarOpen ? "Documents" : ""}
+              href="/documents"
             />
           </nav>
 
           <div className="p-4 border-t space-y-1">
-            <SidebarItem 
-              icon={Settings} 
-              label={isSidebarOpen ? "Settings" : ""} 
-              href="/settings" 
-              active={location.pathname === "/settings"} 
+            <SidebarItem
+              icon={Settings}
+              label={isSidebarOpen ? "Settings" : ""}
+              href="/settings"
             />
           </div>
         </aside>
