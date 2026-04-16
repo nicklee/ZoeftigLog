@@ -83,120 +83,122 @@ export const Shipments = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">All Shipments</h1>
-          <p className="text-muted-foreground">Comprehensive list of all active projects and shipments.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[#0f172a]">All Shipments</h1>
+          <p className="text-sm text-slate-500">Comprehensive list of all active projects and shipments.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" className="gap-2">
-            <Filter className="w-4 h-4" />
+          <Button variant="outline" className="h-9 border-slate-200 text-slate-600 gap-2 text-xs font-semibold">
+            <Filter className="w-3 h-3" />
             More Filters
           </Button>
-          <Button variant="outline" className="gap-2">
-            <ArrowUpDown className="w-4 h-4" />
+          <Button variant="outline" className="h-9 border-slate-200 text-slate-600 gap-2 text-xs font-semibold">
+            <ArrowUpDown className="w-3 h-3" />
             Sort
           </Button>
         </div>
       </div>
 
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="relative w-full sm:w-80">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input 
-                placeholder="Search shipments..." 
-                className="pl-10"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                id="shipment-search"
-              />
-            </div>
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="p-4 border-b border-slate-200 bg-white">
+          <div className="relative w-full sm:w-80">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Input 
+              placeholder="Search reference, project..." 
+              className="pl-10 h-9 bg-slate-50/50 border-slate-200 text-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              id="shipment-search"
+            />
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-md border overflow-hidden">
-            <Table>
-              <TableHeader className="bg-muted/50">
-                <TableRow>
-                  <TableHead className="w-[150px]">Reference</TableHead>
-                  <TableHead>Project / Customer</TableHead>
-                  <TableHead>Origin / Destination</TableHead>
-                  <TableHead>Mode</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Risk</TableHead>
-                  <TableHead className="text-right">Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredShipments.map((shipment) => {
-                  const Icon = MODE_ICONS[shipment.mode];
-                  return (
-                    <TableRow key={shipment.id} className="group cursor-pointer hover:bg-muted/50">
-                      <TableCell className="font-mono text-sm font-medium">
-                        <Link to={`/shipments/${shipment.id}`} className="hover:underline">
-                          {shipment.reference}
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-col">
-                          <span className="font-semibold text-sm">{shipment.projectName}</span>
-                          <span className="text-xs text-muted-foreground">{shipment.customerName}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-col text-xs">
-                          <span className="text-muted-foreground">From: {shipment.origin}</span>
-                          <span className="font-medium">To: {shipment.destination}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Icon className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-xs uppercase font-medium">{shipment.mode}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className={cn("px-2 py-0.5 whitespace-nowrap", STATUS_VARIANTS[shipment.status])}>
-                          {shipment.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={RISK_VARIANTS[shipment.riskLevel] as any} className="text-[10px] uppercase font-bold tracking-wider px-1.5 h-5">
+        </div>
+        
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader className="bg-slate-50">
+              <TableRow className="border-b border-slate-200 hover:bg-slate-50">
+                <TableHead className="px-4 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Ref #</TableHead>
+                <TableHead className="px-4 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Project / Customer</TableHead>
+                <TableHead className="px-4 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Origin / Mode</TableHead>
+                <TableHead className="px-4 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">ETA</TableHead>
+                <TableHead className="px-4 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Status</TableHead>
+                <TableHead className="px-4 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Risk</TableHead>
+                <TableHead className="px-4 py-3 text-right"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredShipments.map((shipment) => {
+                const Icon = MODE_ICONS[shipment.mode];
+                return (
+                  <TableRow key={shipment.id} className="group cursor-pointer hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0" onClick={() => window.location.href=`/shipments/${shipment.id}`}>
+                    <TableCell className="px-4 py-4 font-bold text-sm">
+                      {shipment.reference.replace("AS-", "SHP-")}
+                    </TableCell>
+                    <TableCell className="px-4 py-4">
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-sm text-[#0f172a]">{shipment.projectName}</span>
+                        <span className="text-[11px] text-slate-500">{shipment.customerName}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-4 py-4 text-sm text-slate-500">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs">{shipment.origin}</span>
+                        <span className="text-slate-300">/</span>
+                        <Icon className="w-3.5 h-3.5" />
+                        <span className="text-[10px] font-bold uppercase tracking-tight">{shipment.mode}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-4 py-4 font-medium text-sm text-slate-700">
+                      {shipment.status === "Delayed" ? (
+                        <span className="text-red-600 font-bold">Delayed</span>
+                      ) : (
+                        shipment.eta.split("-").slice(1).join("/")
+                      )}
+                    </TableCell>
+                    <TableCell className="px-4 py-4">
+                      <span className={cn(
+                        "px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide",
+                        shipment.status === "In transit" ? "bg-blue-100 text-blue-700" :
+                        shipment.status === "At port" ? "bg-amber-100 text-amber-800" :
+                        shipment.status === "Customs paperwork required" ? "bg-orange-100 text-orange-800" :
+                        shipment.status === "Delayed" ? "bg-red-100 text-red-700" :
+                        "bg-slate-100 text-slate-600"
+                      )}>
+                        {shipment.status}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-4 py-4">
+                      <div className="flex items-center gap-2">
+                        <div className={cn(
+                          "w-2 h-2 rounded-full",
+                          shipment.riskLevel === "High" ? "bg-red-500" :
+                          shipment.riskLevel === "Medium" ? "bg-amber-500" :
+                          "bg-emerald-500"
+                        )} />
+                        <span className="text-[10px] font-bold uppercase text-slate-500 tracking-wider">
                           {shipment.riskLevel}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem asChild>
-                              <Link to={`/shipments/${shipment.id}`} className="w-full flex items-center gap-2">
-                                <Eye className="h-4 w-4" /> View Details
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive">Mark as Delayed</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-4 py-4 text-right">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 group-hover:text-slate-600">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
+        
+        <div className="p-4 bg-slate-50/50 flex items-center justify-between text-xs text-slate-500 border-t border-slate-200">
+          <span>Showing <strong>{filteredShipments.length}</strong> active trackers</span>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" className="h-8 border-slate-200 text-[10px]" disabled>Prev</Button>
+            <Button variant="outline" size="sm" className="h-8 border-slate-200 text-[10px]" disabled>Next</Button>
           </div>
-          <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
-            <span>Showing {filteredShipments.length} shipments</span>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" disabled>Previous</Button>
-              <Button variant="outline" size="sm" disabled>Next</Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };
