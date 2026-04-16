@@ -1,0 +1,6 @@
+{
+  "name": "AeroSeat Logistics Control Tower",
+  "description": "Internal logistics management system for airport seating shipments, tracking milestones, documentation, and operational risks.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
